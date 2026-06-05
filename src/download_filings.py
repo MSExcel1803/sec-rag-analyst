@@ -1,4 +1,4 @@
-from sec_edgar_downloader import Downloader
+from sec_edgar_downloader import Downloader # type: ignore
 
 # SEC requires a real name and email for rate limiting
 dl = Downloader("Harsh", "harshsahu2183@gmail.com", "./filings")
