@@ -21,21 +21,30 @@ def retrieve(query, top_k=5, ticker_filter=None):
     conn = psycopg2.connect(DATABASE_URL)
     cur = conn.cursor()
     
-    base_sql = """
-        select ticker, year, section, content,
-               1 - (embedding <=> %s::vector) as similarity
-        from filing_chunks
-    """
-    params = [embedding]
+    # Increase ivfflat probes so filtered queries find their data
+    cur.execute("SET ivfflat.probes = 20")
     
     if ticker_filter:
-        base_sql += " where ticker = any(%s)"
-        params.append(ticker_filter)
+        sql = """
+            select ticker, year, section, content,
+                   1 - (embedding <=> %s::vector) as similarity
+            from filing_chunks
+            where ticker = ANY(%s)
+            order by embedding <=> %s::vector
+            limit %s
+        """
+        params = [embedding, list(ticker_filter), embedding, top_k]
+    else:
+        sql = """
+            select ticker, year, section, content,
+                   1 - (embedding <=> %s::vector) as similarity
+            from filing_chunks
+            order by embedding <=> %s::vector
+            limit %s
+        """
+        params = [embedding, embedding, top_k]
     
-    base_sql += " order by embedding <=> %s::vector limit %s"
-    params.extend([embedding, top_k])
-    
-    cur.execute(base_sql, params)
+    cur.execute(sql, params)
     results = cur.fetchall()
     cur.close()
     conn.close()
