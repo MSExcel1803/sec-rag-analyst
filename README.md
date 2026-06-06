@@ -2,6 +2,8 @@
 
 A retrieval-augmented analytics tool that answers business and financial questions over the last three years of 10-K filings from 15 large-cap companies across tech, financial services, and retail.
 
+**Live demo:** https://sec-rag-analyst-azrdpa8gsx3vutkokxappnk.streamlit.app
+
 ## What it does
 
 Ask natural-language questions about company strategy, risks, business segments, or comparative analysis. The system retrieves relevant excerpts from SEC filings, then uses Claude to synthesize a grounded answer with inline citations like `[MSFT 2024 risk_factors]`. Every claim traces back to a specific filing section the user can expand and verify.
