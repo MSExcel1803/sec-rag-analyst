@@ -47,7 +47,7 @@ I built a 30-question benchmark across four categories:
 | Thematic      | 42%      |
 | Should-fail   | 100%     |
 
-Common failure modes observed: [fill in 1-2 honest observations from your scoring].
+Common failure modes observed: Comparative and thematic queries underperformed because retrieval without strict ticker filtering returns chunks dominated by companies with the most text in the corpus, starving smaller companies of representation in top-k results. Thematic queries that map to all five companies in an industry are especially affected since the top 10 chunks rarely cover all five evenly. Future work: rerank with a cross-encoder, or retrieve per-ticker and merge results to guarantee coverage.
 
 ## Setup
 
